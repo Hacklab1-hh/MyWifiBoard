@@ -1,5 +1,6 @@
 #include "commands.h"
 #include "Mkeyb.h"
+#include "xJoystick.h"
 
 String currentCommandMode = "";
 
@@ -29,13 +30,10 @@ void processCommand(String command) {
     currentCommandMode = "";
   } else if (command == CM_STAT) {
     Serial.println(getCommandMode());
-  } else if (currentCommandMode == "KB") {
-    if (command.startsWith("setLayout ")) {
-      String layout = command.substring(10);
-      setLayoutCommand(layout);
-    } else if (command.startsWith("KEY ") || command.startsWith("STRING ")) {
-      //typeKeyCommand(command);
-    }
+  } else if (currentCommandMode == "KB") { 
+    // wenn der mode über seriell oder i2c oder spi gesetzt wurde, dann auf den erforderlichen geräten die Statusrückmeldung ausgeben
+    String kbCommand = command.substring(3);
+    processKeyboardCommand(kbCommand);
   } else {
     setCommandMode(command);
   }
@@ -52,39 +50,76 @@ void setLayoutCommand(String layout) {
   // Weitere Layouts hinzufügen
 }
 
-// void typeKeyCommand(String command) {
-//   if (command.startsWith("KEY ")) {
+ void typeKeyCommand(String command) {
+   if (command.startsWith("KEY ")) {
 //     uint8_t key = command.substring(4).toInt();
 //     Keyboard.press(key);
-//     delay(10);
+     delay(10);
 //     Keyboard.release(key);
-//   } else if (command.startsWith("STRING ")) {
-//     String str = command.substring(7);
+   } else if (command.startsWith("STRING ")) {
+     String str = command.substring(7);
 //     Keyboard.print(str);
-//   }
-// }
+   }
+ }
 
 
 void processKeyboardCommand(String command) {
   // Implementieren Sie die Funktion zur Verarbeitung von Tastaturbefehlen
+      if (command.startsWith("setLayout ")) {
+      String layout = command.substring(10);
+      setLayoutCommand(layout);
+    } else if (command.startsWith("KEY ")) {
+      //typeKeyCommand(command);
+    } else if (command.startsWith("STRING ")) {
+      //typeKeyCommand(command);
+    }
+
+}
+void processKeyboardCommandStreams(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von Tastaturbefehls Streams
+      if (command.startsWith("setLayout ")) {
+      String layout = command.substring(10);
+      setLayoutCommand(layout);
+    } else if (command.startsWith("KEY ") || command.startsWith("STRING ")) {
+      //typeKeyCommand(command);
+    }
+
 }
 
 void processMouseCommand(String command) {
   // Implementieren Sie die Funktion zur Verarbeitung von Mausbefehlen
+
+}
+void processMouseCommandStream(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von Mausbefehls Streams
+
 }
 
-void processJoystickCommand(String command) {
-  // Implementieren Sie die Funktion zur Verarbeitung von Joystickbefehlen
-}
+
 
 void processSerialCommand(String command) {
   // Implementieren Sie die Funktion zur Verarbeitung von seriellen Befehlen
+
 }
+void processSerialCommandStream(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von seriellen Befehls Streams
+
+}
+
 
 void processEsp32Command(String command) {
   // Implementieren Sie die Funktion zur Verarbeitung von ESP32-Befehlen
 }
+void processEsp32CommandStream(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von ESP32-Befehls Streams
+}
 
+void processEsp32Serial(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von ESP32-Serial-Befehlen
+}
+void processEsp32SerialStream(String command) {
+  // Implementieren Sie die Funktion zur Verarbeitung von ESP32-Serial Streams
+}
 void setCommandMode(String mode) {
   currentCommandMode = mode;
 }
